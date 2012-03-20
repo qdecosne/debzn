@@ -4,10 +4,10 @@ define( MYSQLINC_INCLUDE, 1 );
 
 if (!defined(MYSQL_INCLUDE)) { require_once( INCLUDEPATH .'mysql.php' ); }
 
-$options['hostname'] = ''; // Hostname
-$options['username'] = ''; // Username
-$options['password'] = ''; // Password
-$options['dbname'] = ''; // Database name
+$options['hostname'] = 'localhost'; // Hostname
+$options['username'] = 'debzn'; // Username
+$options['password'] = 'debzn'; // Password
+$options['dbname'] = 'debzn'; // Database name
 
 $db = new mysql( $options );
 $db->connect();
