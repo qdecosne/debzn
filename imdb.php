@@ -38,7 +38,6 @@ class imdb
 		'url' => array(
 			'search' => 'http://www.google.co.uk/search?hl=en&q=%s+site:imdb.com&btnI=I\'m+Feeling+Lucky',
 			'id' => 'http://www.imdb.com/title/%s/',
-			'credits' => 'http://www.imdb.com/title/%s/fullcredits',
 			'nameid' => 'http://www.imdb.com/name/%s/',
 			'aka' => 'http://www.imdb.com/title/%s/releaseinfo#akas'
 		),
@@ -46,17 +45,11 @@ class imdb
 			'id' => array(
 				'/http:\/\/(?:www\.|.*)?imdb.com(?:.*?)\/title\/tt(\d+)\//i',
 				'/http:\/\/(?:www\.|.*)?imdb.com(?:.*?)\/Title\?(\d+)/i'
-				//'/<p><b>Popular Titles<\/b> \(Displaying \d+ Results?\)<ol><li>\s*<a href="\/title\/([^\/]+)\//i',
-				//'/<p><b>Titles \(Exact Matches\)<\/b> \(Displaying \d+ Results?\)<ol><li>\s*<a href="\/title\/([^\/]+)\//i',
-				//'/<p><b>Titles \(Partial Matches\)<\/b> \(Displaying \d+ Results?\)<ol><li>\s*<a href="\/title\/([^\/]+)\//i'
+
 				),
 			'film' => array(
 				'title' => '/<meta property=\"og:title\" content=\"(.*?)(\(\d+\))\"\/>/i',
-				'rating' => '/<span class="rating-rating">([0-9\.]+)<span>/i',
-				//'genreContainer' => '/<div class="see-more inline canwrap">\s*<h4 class="inline">Genres:</h4>\s*(.+?)<\/div>/i',
 				'genre' => '/href="\/genre\/(.*?)"/iS',
-				'plot' => '/<h2>Storyline<\/h2>\s*<p>(.+?)<em class="nobr">/i',
-				'crew' => '/(?:<h5><a class="glossary" name=".+?" href="\/glossary\/.#(\w+)">.+?<\/a><\/h5><\/td><\/tr>)?<tr>\s*<td valign="top"><a href="\/name\/(nm\d+)\/">(.+?)<\/a><\/td><td(?: valign="top"(?: nowrap="1")?)?>.+?<\/td><td valign="top">(?:<a href=".+?\/glossary\/.+?">)?([^<]+)/i',
 				'country' => '/href="\/country\/(.*?)"/iS',
 				'akaInt' => '/<td>(.*)<\/td>\s*<td>(.*)International/i',	//Priority goes to international title
 				'akaUS' => '/<td>(.*)<\/td>\s*<td>(.*)USA/i',				//then us
