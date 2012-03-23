@@ -765,11 +765,17 @@ class ed
 				}
 				else
 				{
+					if(strpos($show->url,"tvrage"))
+							$url = sprintf( '%s/episode_list/%d', $show->url, $matches[2] );
+						else 
+							$url = sprintf( '%s/', $show->url );
+							
 					$ep = (object)array(
 						'series' => sprintf("%d", $matches[2] ),
 						'episode' => $matches[3],
 						'title' => sprintf( 'Season %d, Episode %d', $matches[2], $matches[3] ),
-						'url' => sprintf( '%s/episode_list/%d', $show->url, $matches[2] ) );
+						'url' => $url);
+						print_r($ep);
 					if ( $this->debug ) var_dump( $ep );				
 					return $this->tvGetReport( $show, $ep, $matches[4] );
 				}
