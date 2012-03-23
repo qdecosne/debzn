@@ -5,9 +5,11 @@ $path = 'C:/xampp/htdocs/nzbed/PEAR'; //I use pear for Dates, DB acces, xml pars
 
 set_include_path(get_include_path() . PATH_SEPARATOR . $path);
 
-ini_set("display_errors", 0); // Just to be sure i don't output error in the XML
 
 define( 'INCLUDEPATH', './' );
+define('DEBUG',FALSE);
+ini_set("display_errors", 0); // Just to be sure i don't output error in the XML
+
 
 require_once( INCLUDEPATH.'mysql.inc.php' );
 require_once( INCLUDEPATH.'ed.php' );
@@ -162,7 +164,8 @@ if ( isset( $_REQUEST['q'] ) )
 
 	$api = new api($_REQUEST['i'], $_REQUEST['c']);
 
-	header( 'Content-type: text/xml' );
+	if(!DEBUG)
+		header( 'Content-type: text/xml' );
 
 	$arr = $api->getInfo( $_REQUEST['q'], $_REQUEST['t'] );
 
