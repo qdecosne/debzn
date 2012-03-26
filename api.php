@@ -14,7 +14,7 @@ ini_set("display_errors", 0); // Just to be sure i don't output error in the XML
 require_once( INCLUDEPATH.'mysql.inc.php' );
 require_once( INCLUDEPATH.'ed.php' );
 require_once( INCLUDEPATH.'tvrage.php' );
-require_once( INCLUDEPATH.'imdbapi.php' );
+require_once( INCLUDEPATH.'imdb.php' );
 require_once( INCLUDEPATH.'gamespot.php' );
 require_once( INCLUDEPATH.'allmusic.php' );
 require_once( INCLUDEPATH.'anidb.php' );

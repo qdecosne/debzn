@@ -120,7 +120,8 @@ class ed
 				'DVD' => '/dvd/i',
 				'TV Cap' => '/(tvrip|pdtv|dsr|dvb|sdtv|dtv|satrip)/i',
 				'HD-DVD' => '/hd[-.]?dvd/i',
-				'Blu-ray' => '/(blu[-. ]?ray|b(d|r|rd)[-.]?(rom|rip))/i'
+				'Blu-ray' => '/(blu[-. ]?ray|b(d|r|rd)[-.]?(rom|rip))/i',
+				'Web-Dl' => '/WEB[-. ]?DL/i'
 				),
 			'Format' => array(
 				'XviD' => '/xvid/i',
@@ -282,6 +283,7 @@ class ed
 				'Games' => 4,
 				'Music' => 7,
                 'Anime' => 11,
+                'Documentaries' => 16,
 				),
 			'categoryGroups' => array(
 				'Movies' => array( 'Format', 'Source', 'VideoGenre', 'Audio', 'Region', 'Language', 'Subtitle' ),
@@ -290,6 +292,7 @@ class ed
 				'Games' => array( 'Media', 'GameGenre', 'Language' ),
 				'Music' => array( 'Audio', 'AudioGenre' ),
                 'Anime' => array( 'Anime', 'Format', 'Language', 'Subtitle' ),
+                'Documentaries' => array( 'Format', 'Source', 'Audio', 'Region', 'Language', 'Subtitle' ),
 				'All' => array( 'Format', 'Source', 'VideoGenre', 'Audio', 'Region', 'Media', 'ConsolePlatform', 'GameGenre', 'AudioGenre', 'Language', 'Anime', 'Subtitle' ),
 				),
 			'attributeGroups' => array(
@@ -318,7 +321,8 @@ class ed
 					'DVD' => 64,
 					'TV Cap' => 256,
 					'HD-DVD' => 512,
-					'Blu-ray' => 2048
+					'Blu-ray' => 2048,
+					'Web-Dl' => 4096,
 					),
 				'Format' => array(
 					'XviD' => 16,
@@ -775,7 +779,7 @@ class ed
 						'episode' => $matches[3],
 						'title' => sprintf( 'Season %d, Episode %d', $matches[2], $matches[3] ),
 						'url' => $url);
-						print_r($ep);
+						//print_r($ep);
 					if ( $this->debug ) var_dump( $ep );				
 					return $this->tvGetReport( $show, $ep, $matches[4] );
 				}
@@ -999,13 +1003,16 @@ class ed
 		{
 			if ( in_array( $attr, $this->_def['report']['categoryGroups']['TV'] ) )
 			{
+				
 				foreach( $array as $id => $reg )
 				{
+				
 					if ( substr( $reg, 0, 1 ) == '!' ) 
 					{
 						// denote a negative regex
 						if ( ! preg_match( substr( $reg, 1 ), $aStr ) )
 						{
+							
 							$this->addAttr( $report, 'TV', $attr, $id );
 						}							
 					}
@@ -1013,6 +1020,7 @@ class ed
 					{
 						if ( preg_match( $reg, $aStr ) )
 						{
+
 							$this->addAttr( $report, 'TV', $attr, $id );
 						}
 					}
@@ -1493,12 +1501,15 @@ class ed
 			{
 				$this->addAttr( $report, 'Movies', 'VideoGenre', $gen );
 			}
+			if($gen == "Documentary")	//Force the category to documentaries when genre = documentary
+				$report['category'] = 'Documentaries';
 		}
 		
 		if ( ( !$this->ids ) &&
 			 ( is_array( $report['attributes']['VideoGenre'] ) ) )
 			sort( $report['attributes']['VideoGenre'] );
-		//print_r($report);
+	
+	
 		return $report;	
 	}
 
