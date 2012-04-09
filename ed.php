@@ -214,11 +214,11 @@ class ed
 				'Adventure' => 'Action/Adv',
 				'Celebrities' => 'Reality',
 				'Dance' => 'Reality',
-				//'Discovery/Science' => 'Documentary',
+				'Discovery/Science' => 'Documentary',
 				'Lifestyle' => 'Reality',
-				//'Medical' => 'Documentary',
+				'Medical' => 'Documentary',
 				'Military' => 'War',
-				//'Politics' => 'Documentary',
+				'Politics' => 'Documentary',
 				'Religion' => 'Family',
 				'Soaps' => 'Comedy',
 				'Sports' => 'Sport',
@@ -1501,8 +1501,8 @@ class ed
 			{
 				$this->addAttr( $report, 'Movies', 'VideoGenre', $gen );
 			}
-			if($gen == "Documentary")	//Force the category to documentaries when genre = documentary
-				$report['category'] = 'Documentaries';
+			//if($gen == "Documentary")	//Force the category to documentaries when genre = documentary
+			//	$report['category'] = 'Documentaries';
 		}
 		
 		if ( ( !$this->ids ) &&
