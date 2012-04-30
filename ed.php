@@ -216,7 +216,7 @@ class ed
 				'Dance' => 'Reality',
 				'Discovery/Science' => 'Documentary',
 				'Lifestyle' => 'Reality',
-				'Medical' => 'Documentary',
+				//'Medical' => 'Documentary',
 				'Military' => 'War',
 				'Politics' => 'Documentary',
 				'Religion' => 'Family',
