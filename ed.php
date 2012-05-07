@@ -121,13 +121,14 @@ class ed
 				'TV Cap' => '/(tvrip|pdtv|dsr|dvb|sdtv|dtv|satrip)/i',
 				'HD-DVD' => '/hd[-.]?dvd/i',
 				'Blu-ray' => '/(blu[-. ]?ray|b(d|r|rd)[-.]?(rom|rip))/i',
-				'Web-Dl' => '/WEB[-. ]?DL/i'
+				'Web-Dl' => '/(web[-. ]?dl|hditunes|ituneshd|ithd|webhd)/i'
 				),
 			'Format' => array(
 				'XviD' => '/xvid/i',
                 'DVD' => '/dvd(?!rip?.)/i',
-				'x264' => '/x264/i',
-				'H.264' => '/(h\.?264|avc)/i',
+				'H.264/x264' => '/((h.?264|x264|avc))/i',
+				//'x264' => '/(x264|h\.?264|avc)/i',
+				//'H.264' => '/(h\.?264|avc)/i',
 				'AVCHD' => '/avchd/i',
 				'HD .TS' => '/\.ts(?!\.)/i',
 				'SVCD' => '/svcd/i',
@@ -186,7 +187,7 @@ class ed
             'Subtitle' => array(
                 'French' => '/((vostfr)|(vost))/i',
                 'German' => '/(german.sub)/i',
-                'Dutch' => '/((nlsubs)|(nlsubbed))/i'
+                'Dutch' => '/((nlsubs)|(nl.?subbed))/i'
                 ),
 			),
 		'filmMatch' => array(
