@@ -758,7 +758,7 @@ class ed
 			
 			else if ( $mUsed == 'TV' )
 			{
-			
+		
 			// if standard naming scheme 
 //				list( $nSeries, $nEpisode ) = $this->tvNewSEp( $show, $matches[2], $matches[3], true ); 
 				if ( ( $ep = $api->tvrage->getEpisode( $show->tvrageShowID, $matches[2], $matches[3], 
@@ -780,7 +780,7 @@ class ed
 						'episode' => $matches[3],
 						'title' => sprintf( 'Season %d, Episode %d', $matches[2], $matches[3] ),
 						'url' => $url);
-						//print_r($ep);
+					
 					if ( $this->debug ) var_dump( $ep );				
 					return $this->tvGetReport( $show, $ep, $matches[4] );
 				}
@@ -810,6 +810,7 @@ class ed
 				
 				for ( $i = $min; $i <= $max; $i++ )
 				{
+				   
 	//				list( $nSeries, $nEpisode ) = $this->tvNewSEp( $show, $matches[2], $i, true );
 					if ( ( $tep = $api->tvrage->getEpisode( $show->tvrageShowID, $matches[2], $i, $this->ignoreCache ) ) !== false )
 					{
@@ -837,11 +838,15 @@ class ed
 						return $this->tvGetReport( $show, $ep, $matches[4] );
 					}
 					else{
+					    $epNum = $matches[3];
+					    if(substr($matches[3],0,1)=="E")
+                            $epNum = trim(substr($matches[3],1));
 						$ep = (object)array(
 							'series' => sprintf("%d", $matches[2] ),
-							'episode' => $matches[3],
-							'title' => sprintf( 'Season %d, Episode %d', $matches[2], $matches[3] ),
+							'episode' => $epNum,
+							'title' => sprintf( 'Season %d, Episode %d', $matches[2], $epNum),
 							'url' => sprintf( '%s/episode_list/%d', $show->url, $matches[2] ) );
+						//print_r($ep);
 						if ( $this->debug ) var_dump( $ep );				
 							return $this->tvGetReport( $show, $ep, $matches[4] );
 					}
