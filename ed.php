@@ -120,7 +120,7 @@ class ed
 				'DVD' => '/dvd/i',
 				'TV Cap' => '/(tvrip|pdtv|dsr|dvb|sdtv|dtv|satrip)/i',
 				'HD-DVD' => '/hd[-.]?dvd/i',
-				'Blu-ray' => '/(blu[-. ]?ray|b(d|r|rd)[-.]?(rom|rip))/i',
+				'Blu-ray' => '/(blu[-. ]?ray|b(d|r|rd)[-.]?(rom|rip))/iS',
 				'Web-Dl' => '/(web[-. ]?dl|hditunes|ituneshd|ithd|webhd)/i'
 				),
 			'Format' => array(
@@ -327,7 +327,7 @@ class ed
 					),
 				'Format' => array(
 					'XviD' => 16,
-					'x264' => 131072,
+					'H.264/x264' => 131072,
 					'H.264' => 2048,
 					'HD .TS' => 32,
 					'SVCD' => 4,
