@@ -1,6 +1,6 @@
 <?php
 
-define( 'MYSQL_INCLUDE', 1 );
+//define( 'MYSQL_INCLUDE', 1 );
 
 class mysql {
 

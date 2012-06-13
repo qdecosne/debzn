@@ -40,6 +40,7 @@ class ed
         'anidb' => '/^(?:http:\/\/)?(?:www\.)?anidb.net\/(?:perl-bin\/animedb.pl?show=anime&aid=)?(a?\d+)/i',
 				'gm' => '/^(?:http:\/\/)?(?:www\.)?google\.com\/musicl\?lid=(.+?)(?:&aid=.+?)?$/i',
 				),
+			'isXXX' => '/^(.+?)([X]{3}.*)$/Si',
 			'isTV' => '/^(.+?)(?<!the)(?:\.|\s|\s-\s|\(|\[|\_|\-|)(?:\(|\[|\_|\-)?((?:s|series|season|seizoen|saison|staffel)?\s?(?:\.|\_|\-)?\s?([0-9]+?),?\s?\.?(?:e|x|ep|episode|d|dvd|disc|disk|\-)(?!264)\s?(?:\.|\_|\-)?\s?([0-9]{2,3})(?![0-9]+)|(\d{2,4})\.(\d{2})\.(\d{2,4}))(?:\.|\s\-\s|\s|\)|\]|\_|\-)?(.*)$/i',
 //			'TV' => array(			
 //				'/^(.+?)(?<!the)(?:\.|\s|\s-\s|\(|\[|\_|\-|)(?:\(|\[|\_|\-)?(?:(?:\.|\s|\-)s|series|season)?\s?(?:\.|\_|\-)?\s?([0-9]{1,2}?)(?:,|\-)?\s?\.?(?:e|x|ep|episode)(?!264)\s?([0-9]+)(?![0-9]+)(?:\.|\s\-\s|\s|\)|\]|\_|\-)?(.*)$/i',
@@ -90,6 +91,9 @@ class ed
                 '/(.+?)\s+-ep.(\d+)(.+?)?$/i',
                 '/(.+?)\s*(?:[-_\.]|\s*)(?:ep(?:isode)?)?\s*[-_\.]?\s*((?:\d+\s?-\s?)?\d+)(.+?)?$/i'                
                 ),
+            'XXX' => array(
+            	'/^(.+?)(?<!the)\s*(\d{2,4}+)(?:\.|\s)(\d{2})(?:\.|\s)(\d{2,4}+)\s*(.*)\s*([X]{3}.*)$/i'
+            	),
             'epSplit' => '/(\d+)\s*-\s*(\d+)/i',
 			),
 		'addPart' => array(
@@ -126,7 +130,7 @@ class ed
 			'Format' => array(
 				'XviD' => '/xvid/i',
                 'DVD' => '/dvd(?!rip?.)/i',
-				'H.264/x264' => '/((h.?264|x264|avc))/i',
+				'H.264/x264' => '/((h.?264|x264|avc|mp4))/i',
 				//'x264' => '/(x264|h\.?264|avc)/i',
 				//'H.264' => '/(h\.?264|avc)/i',
 				'AVCHD' => '/avchd/i',
@@ -269,6 +273,22 @@ class ed
 				'Pop' => 'Rock/Pop',
 				'Pop/Rock' => 'Rock/Pop'
 				),
+			'xxxgenre' => array(
+				'Clips' => 'Clips',
+				'Amateur' => 'Amateur',
+				'Premium' => 'Premium',
+				'Anal' => '/((anal)|(ass))/Si',
+				'BSDM' => 'BSDM',
+				'Blowjobs' => '(blowjob.?s)|(bj)/Si',
+				'Gay (M)' => 'Gay',
+				'Lesbian' => 'Lesbian',
+				'Teens' => '/(teen.?s)/Si',
+				'MILF' => '/(mom)|(MILF)/Si',
+				'TS' => '/(\.+TS\.+)|(Trans.*)/Si',
+				'TV' => 'TV',
+				'BI' => 'BI',
+				'ImageSet' => '/(imageset)/Si'
+				),
             ),
 		'report' => array(
 			'fields' => array(
@@ -285,6 +305,7 @@ class ed
 				'Music' => 7,
                 'Anime' => 11,
                 'Documentaries' => 16,
+                'XXX' => 9
 				),
 			'categoryGroups' => array(
 				'Movies' => array( 'Format', 'Source', 'VideoGenre', 'Audio', 'Region', 'Language', 'Subtitle' ),
@@ -294,6 +315,7 @@ class ed
 				'Music' => array( 'Audio', 'AudioGenre' ),
                 'Anime' => array( 'Anime', 'Format', 'Language', 'Subtitle' ),
                 'Documentaries' => array( 'Format', 'Source', 'Audio', 'Region', 'Language', 'Subtitle' ),
+                'XXX' => array('Format','Region','XXXGenre','Language'),
 				'All' => array( 'Format', 'Source', 'VideoGenre', 'Audio', 'Region', 'Media', 'ConsolePlatform', 'GameGenre', 'AudioGenre', 'Language', 'Anime', 'Subtitle' ),
 				),
 			'attributeGroups' => array(
@@ -306,6 +328,7 @@ class ed
 				'ConsolePlatform' => 'ps_rb_platform_console',
 				'GameGenre' => 'ps_rb_game_genre',
 				'AudioGenre' => 'ps_rb_audio_genre',
+				'XXXGenre' => 'ps_rb_xxx_genre',
 				'Language' => 'ps_rb_language',
                 'Anime' => 'ps_rb_anime',
                 'Subtitle' => 'ps_rb_subtitle'
@@ -427,6 +450,22 @@ class ed
 					'Rock/Pop' => 2048,
 					'Soundtrack' => 4096
 					),
+				'XXXGenre' => array(
+					'Clips' => 2,
+					'Amateur' => 4,
+					'Premium' => 8,
+					'Anal' => 16,
+					'BSDM' => 32,
+					'Blowjobs' => 256,
+					'Gay (M)' => 64,
+					'Lesbian' => 128,
+					'Teens' => 512,
+					'MILF' => 4096,
+					'TS' => 1024,
+					'TV' => 2048,
+					'Bi' => 8192,
+					'ImageSet' => 1
+					),
 				'Language' => array(
 					'English' => 4096,
 					'French' => 2,
@@ -540,7 +579,12 @@ class ed
 		     ( $type == false ) ||
 			 ( $type == 6 ) )
 		{
-			if ( preg_match( $this->_def['info']['isTV'], $string, $matches ) )
+			if ( preg_match( $this->_def['info']['isXXX'], $string, $matches) )
+			{
+				if ( $this->debug ) printf("Detected XXX: [regex: %s]\n", $this->_def['info']['isXXX'] );
+				$type = 'XXX';
+			}
+			elseif ( preg_match( $this->_def['info']['isTV'], $string, $matches ) )
 			{
 				if ( $this->debug ) printf("Detected TV: [regex: %s]\n", $this->_def['info']['isTV'] );
 				$type = 'TV';
@@ -573,6 +617,8 @@ class ed
 				return $this->gameQuery( $string, $type );
             case 11:
                 return $this->animeQuery( $string );
+            case 9:
+            	return $this->xxxQuery( $string );
 			default:
 				if ( $type > 20 )
 				{
@@ -1768,10 +1814,10 @@ class ed
 
         if ( $matched )
         {
-
+	        print_r($matches);
 	        $artist = str_replace( $this->_def['strip'], ' ', $matches[1] );
 	        $album = str_replace( $this->_def['strip'], ' ', $matches[2] );
-
+	        echo $artist."//".$album;
 	        if ( ( $album = $api->amg->getSAlbum( $artist, $album, $this->ignoreCache ) ) !== false )
 	        {
 	            return $this->musicGetReport( $album, $report );
@@ -1983,6 +2029,95 @@ class ed
         return $report;
     }    
 	
+	function xxxQuery ( $string )
+	{
+		return $this->xxxGetReport( $string );
+		
+	}
+	
+	function xxxGetReport ( $xxx)
+	{
+		global $api;
+        $report = array();
+        if ( isset( $this->_def['info']['XXX'] ) )
+        {
+            foreach( $this->_def['info']['XXX'] as $reg )
+            {
+                if ( preg_match( $reg, $xxx, $matches ) )
+                {
+                    $matched = true;
+                    break;
+                }
+            }
+        }
+        
+        if ( !$matched )
+        {
+            $this->_error = 'Could not match: '.$xxx.', check category';
+            return false;
+        }
+
+        if(substr($matches[1],-1)!='_')
+	        $cSite = $matches[1].'com';
+	    else
+	    	$cSite = substr($matches[1],0,-1);
+	    	
+        if($matches[2] < 50)
+        	$cDate = '20';
+        else
+        	$cDate = '19';
+        	
+        $cDate .= $matches[2].'-'.$matches[3].'-'.$matches[4];
+        $cTitle = trim($this->cleanName($matches[5]));
+        
+        
+        $additionalInfo = '';
+        
+		foreach( $this->_def['attributes'] as $attr => $array )
+        {
+            if ( in_array( $attr, $this->_def['report']['categoryGroups']['XXX'] ) )
+            {
+                foreach( $array as $id => $reg )
+                {
+                    if ( substr( $reg, 0, 1 ) == '!' ) 
+                    {
+                        // denote a negative regex
+                        if ( !preg_match( substr( $reg, 1 ), $xxx ) )
+                        {
+                            $this->addAttr( $report, 'XXX', $attr, $id );
+                        }                            
+                    }
+                    else
+                    {
+                        if ( preg_match( $reg, $xxx ) )
+                        {
+                            $this->addAttr( $report, 'XXX', $attr, $id );
+                        }
+                    }
+                }
+            }
+        }
+        
+        
+        foreach( $this->_def['siteAttributes']['xxxgenre'] as $id => $genre )
+		{
+			if( preg_match ($genre, $xxx)){
+				$this->addAttr( $report, 'XXX', 'XXXGenre', $id );
+				if(strtolower($id) == "imageset")
+					$additionalInfo = "(ImageSet)";
+			}
+		}
+
+    
+        if($additionalInfo !== '(ImageSet)')     
+        	$this->addAttr( $report, 'XXX', 'XXXGenre', 'Clips' );
+        
+        $report[$this->_def['report']['fields']['title']] = sprintf('%s - %s - %s %s',$cSite,$cDate,$cTitle,$additionalInfo);
+        $report[$this->_def['report']['fields']['url']] = sprintf('http://%s',strtolower($cSite));                
+        $report[$this->_def['report']['fields']['category']] = $this->_def['report']['category']['XXX'];
+        return $report;
+	}
+	
 	function dumbQuery( $string, $type )
 	{
 		global $api;
@@ -2169,6 +2304,14 @@ class ed
 			}
 		}	
 		return false;
+	}
+	
+	function cleanName($str){
+		$cleanArr = array('#', '@', '$', '%', '^', '§', '¨', '©', 'Ö');
+		$relname = str_replace($cleanArr, '', $str);
+		$cleanArr = array('_', '.');
+		$relname = str_replace($cleanArr, ' ', $str);
+		return $relname;
 	}
 }
 

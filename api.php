@@ -1,13 +1,13 @@
 <?php
 
-
+/*
 $path = 'C:/xampp/htdocs/nzbed/PEAR'; //I use pear for Dates, DB acces, xml parsing, HTTP request
 
 set_include_path(get_include_path() . PATH_SEPARATOR . $path);
-
+*/
 
 define( 'INCLUDEPATH', './' );
-define('DEBUG',FALSE);
+define('DEBUG',false);
 ini_set("display_errors", 0); // Just to be sure i don't output error in the XML
 
 
