@@ -7,7 +7,7 @@ set_include_path(get_include_path() . PATH_SEPARATOR . $path);
 */
 
 define( 'INCLUDEPATH', './' );
-define('DEBUG',false);
+
 ini_set("display_errors", 0); // Just to be sure i don't output error in the XML
 
 
@@ -19,6 +19,8 @@ require_once( INCLUDEPATH.'gamespot.php' );
 require_once( INCLUDEPATH.'allmusic.php' );
 require_once( INCLUDEPATH.'anidb.php' );
 require_once( INCLUDEPATH.'gm.php' );
+require_once( INCLUDEPATH.'xxx.php' );
+
 
 require_once( 'XML/Serializer.php' );
 
@@ -33,6 +35,7 @@ class api
 	var $amg;
 	var $gm;
     var $anidb;
+    var $xxx;
 	var $xml;
 
 	function api( $ids, $cache )
@@ -47,6 +50,8 @@ class api
 		$this->amg = new amg();
 		$this->gm = new gm();
         $this->anidb = new anidb();
+        $this->xxx = new xxx();
+        
 		
 	 	$options = array(
 			XML_SERIALIZER_OPTION_INDENT           => '    ',
@@ -164,7 +169,7 @@ if ( isset( $_REQUEST['q'] ) )
 
 	$api = new api($_REQUEST['i'], $_REQUEST['c']);
 
-	if(!DEBUG)
+	if(!$_GET['d'])
 		header( 'Content-type: text/xml' );
 
 	$arr = $api->getInfo( $_REQUEST['q'], $_REQUEST['t'] );

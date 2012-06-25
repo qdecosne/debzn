@@ -92,7 +92,7 @@ class ed
                 '/(.+?)\s*(?:[-_\.]|\s*)(?:ep(?:isode)?)?\s*[-_\.]?\s*((?:\d+\s?-\s?)?\d+)(.+?)?$/i'                
                 ),
             'XXX' => array(
-            	'/^(.+?)(?<!the)\s*(\d{2,4}+)(?:\.|\s)(\d{2})(?:\.|\s)(\d{2,4}+)\s*(.*)\s*([X]{3}.*)$/i'
+            	'/^(.+?[_\.+])(?<!the)\s*(\d{2,4}+)(?:\.|\s)(\d{2})(?:\.|\s)(\d{2,4}+)\s*(.*)\s*([X]{3}.*)$/i'
             	),
             'epSplit' => '/(\d+)\s*-\s*(\d+)/i',
 			),
@@ -129,8 +129,8 @@ class ed
 				),
 			'Format' => array(
 				'XviD' => '/xvid/i',
-                'DVD' => '/dvd(?!rip?.)/i',
-				'H.264/x264' => '/((h.?264|x264|avc|mp4))/i',
+                'DVD' => '/dvd(?!(rip|src)/i',
+				'H.264/x264' => '/(h.?264|x264|avc|mp4|mov)/i',
 				//'x264' => '/(x264|h\.?264|avc)/i',
 				//'H.264' => '/(h\.?264|avc)/i',
 				'AVCHD' => '/avchd/i',
@@ -143,7 +143,7 @@ class ed
 				'720p' => '/(720p|\.?720)/i',
 				'1080i' => '/1080i/i',
 				'1080p' => '/1080p/i',
-				'PSP' => '/psp/i',
+				'PSP' => '/\bpsp\b/i',
 				'iPod' => '/\b(ipod|iphone|itouch)\b/i',
 				),
 			'Audio' => array( 
@@ -160,7 +160,7 @@ class ed
 				'Wii' => '/Wii/i',
 				'PS3' => '/PS3/i',
 				'PS2' => '/PS2/i',
-				'PSP' => '/PSP/i',
+				'PSP' => '/\b(PSP)\b/i',
 				'N64' => '/N(intendo)?(\.|\-|_|)64/i',
 				'GameCube' => '/(GC|GameCube)/i',
 				'Nintendo DS' => '/(\.|\-|_)DS/i',
@@ -182,6 +182,7 @@ class ed
 				'Italian' => '/((italian)|(multi(5|3)))/i',
 				'Dutch' => '/((dutch))/i',
                 'Polish' => '/((\.+PL\.+))/i',
+                'Japanese' => '/(JAP)/i'
 				),
 
             'Anime' => array(
@@ -275,19 +276,19 @@ class ed
 				),
 			'xxxgenre' => array(
 				'Clips' => 'Clips',
-				'Amateur' => 'Amateur',
+				'Amateur' => '/(Amateur)/iS',
 				'Premium' => 'Premium',
-				'Anal' => '/((anal)|(ass))/Si',
-				'BSDM' => 'BSDM',
-				'Blowjobs' => '(blowjob.?s)|(bj)/Si',
-				'Gay (M)' => 'Gay',
-				'Lesbian' => 'Lesbian',
-				'Teens' => '/(teen.?s)/Si',
-				'MILF' => '/(mom)|(MILF)/Si',
-				'TS' => '/(\.+TS\.+)|(Trans.*)/Si',
-				'TV' => 'TV',
-				'BI' => 'BI',
-				'ImageSet' => '/(imageset)/Si'
+				'Anal' => '/\b(anal|ass)\b/iS',
+				'BSDM' => '/(bondage|BSDM)/iS',
+				'Blowjobs' => '/(blowjob|bj|BigMouthfuls|gloryhole)/iS',
+				'Gay (M)' => '/(\b(male)\b|Gay)/iS',
+				'Lesbian' => '/(Lesbian|sapphic)/iS',
+				'Teens' => '/(teen|teens)/iS',
+				'MILF' => '/(mom|wife|MILF)/iS',
+				'TS' => '/(\bTS\b)|(Trans.*)/iS',
+				'TV' => '/(trannie)|(\b(TV)\b)/iS',
+				'Bi' => '/\b(Bi)\b/iS',
+				'ImageSet' => '/(imageset)/iS'
 				),
             ),
 		'report' => array(
@@ -2031,11 +2032,12 @@ class ed
 	
 	function xxxQuery ( $string )
 	{
+		$stripedString = str_replace( $this->_def['strip'], ' ', $string );
 		return $this->xxxGetReport( $string );
 		
 	}
 	
-	function xxxGetReport ( $xxx)
+	function xxxGetReport ( $string)
 	{
 		global $api;
         $report = array();
@@ -2043,8 +2045,10 @@ class ed
         {
             foreach( $this->_def['info']['XXX'] as $reg )
             {
-                if ( preg_match( $reg, $xxx, $matches ) )
+            	
+                if ( preg_match( $reg, $string, $matches ) )
                 {
+                	
                     $matched = true;
                     break;
                 }
@@ -2053,25 +2057,35 @@ class ed
         
         if ( !$matched )
         {
-            $this->_error = 'Could not match: '.$xxx.', check category';
+            $this->_error = 'Could not match: '.$string.', check category';
             return false;
         }
 
-        if(substr($matches[1],-1)!='_')
-	        $cSite = $matches[1].'com';
+
+        $cSite = str_replace(".","",$matches[1]);
+        $cDate = '';
+        $additionalInfo = '';
+        
+        if(substr($cSite,-1)!='_')
+	        $cSite = $cSite.'.com';
 	    else
 	    	$cSite = substr($matches[1],0,-1);
 	    	
+
+	    $cDate = '';	
         if($matches[2] < 50)
         	$cDate = '20';
-        else
+        elseif($matches[2] > 50 && $matches[2] < 2000)
         	$cDate = '19';
         	
         $cDate .= $matches[2].'-'.$matches[3].'-'.$matches[4];
+        
         $cTitle = trim($this->cleanName($matches[5]));
+        if($cTitle != '')
+        	$cTitle = ' - '.$cTitle;
         
+      
         
-        $additionalInfo = '';
         
 		foreach( $this->_def['attributes'] as $attr => $array )
         {
@@ -2082,14 +2096,14 @@ class ed
                     if ( substr( $reg, 0, 1 ) == '!' ) 
                     {
                         // denote a negative regex
-                        if ( !preg_match( substr( $reg, 1 ), $xxx ) )
+                        if ( !preg_match( substr( $reg, 1 ), $string ) )
                         {
                             $this->addAttr( $report, 'XXX', $attr, $id );
                         }                            
                     }
                     else
                     {
-                        if ( preg_match( $reg, $xxx ) )
+                        if ( preg_match( $reg, $string ) )
                         {
                             $this->addAttr( $report, 'XXX', $attr, $id );
                         }
@@ -2101,10 +2115,10 @@ class ed
         
         foreach( $this->_def['siteAttributes']['xxxgenre'] as $id => $genre )
 		{
-			if( preg_match ($genre, $xxx)){
+			if( preg_match ($genre, $string)){
 				$this->addAttr( $report, 'XXX', 'XXXGenre', $id );
 				if(strtolower($id) == "imageset")
-					$additionalInfo = "(ImageSet)";
+					$additionalInfo = " (ImageSet)";
 			}
 		}
 
@@ -2112,7 +2126,7 @@ class ed
         if($additionalInfo !== '(ImageSet)')     
         	$this->addAttr( $report, 'XXX', 'XXXGenre', 'Clips' );
         
-        $report[$this->_def['report']['fields']['title']] = sprintf('%s - %s - %s %s',$cSite,$cDate,$cTitle,$additionalInfo);
+        $report[$this->_def['report']['fields']['title']] = sprintf('%s - %s%s%s',$cSite,$cDate,$cTitle,$additionalInfo);
         $report[$this->_def['report']['fields']['url']] = sprintf('http://%s',strtolower($cSite));                
         $report[$this->_def['report']['fields']['category']] = $this->_def['report']['category']['XXX'];
         return $report;
