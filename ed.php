@@ -37,10 +37,12 @@ class ed
 				'imdb' => '/^(?:http:\/\/)?(?:www\.)?imdb\.com\/title\/(tt\d+)/i',
 				'gamespot' => '/^(?:http:\/\/)?.+?\.gamespot\.com\/(.+\/.+\/.+\/)/i',
 				'amg' => '/^(?:http:\/\/)?(?:www\.)?allmusic.com\/album\/([^\/]+)/i',
-        'anidb' => '/^(?:http:\/\/)?(?:www\.)?anidb.net\/(?:perl-bin\/animedb.pl?show=anime&aid=)?(a?\d+)/i',
+				'anidb' => '/^(?:http:\/\/)?(?:www\.)?anidb.net\/(?:perl-bin\/animedb.pl?show=anime&aid=)?(a?\d+)/i',
 				'gm' => '/^(?:http:\/\/)?(?:www\.)?google\.com\/musicl\?lid=(.+?)(?:&aid=.+?)?$/i',
 				),
-			'isXXX' => '/^(.+?)([X]{3}.*)$/Si',
+			'isXXX' => '/^(.+?)([X]{3}.*)$/i',
+			'isPDA'=>'/^(.+?)(iphone|ipad|ipod|pda|android)/i',
+			'isApp'=>'/^(.+?)(MacOS)/i',
 			'isTV' => '/^(.+?)(?<!the)(?:\.|\s|\s-\s|\(|\[|\_|\-|)(?:\(|\[|\_|\-)?((?:s|series|season|seizoen|saison|staffel)?\s?(?:\.|\_|\-)?\s?([0-9]+?),?\s?\.?(?:e|x|ep|episode|d|dvd|disc|disk|\-)(?!264)\s?(?:\.|\_|\-)?\s?([0-9]{2,3})(?![0-9]+)|(\d{2,4})\.(\d{2})\.(\d{2,4}))(?:\.|\s\-\s|\s|\)|\]|\_|\-)?(.*)$/i',
 //			'TV' => array(			
 //				'/^(.+?)(?<!the)(?:\.|\s|\s-\s|\(|\[|\_|\-|)(?:\(|\[|\_|\-)?(?:(?:\.|\s|\-)s|series|season)?\s?(?:\.|\_|\-)?\s?([0-9]{1,2}?)(?:,|\-)?\s?\.?(?:e|x|ep|episode)(?!264)\s?([0-9]+)(?![0-9]+)(?:\.|\s\-\s|\s|\)|\]|\_|\-)?(.*)$/i',
@@ -94,6 +96,9 @@ class ed
             'XXX' => array(
             	'/^(.+?[_\.+])(?<!the)\s*(\d{2,4}+)(?:\.|\s)(\d{2})(?:\.|\s)(\d{2,4}+)\s*(.*)\s*([X]{3}.*)$/i'
             	),
+            'PDA' => array(
+            	'/^(.+?)(\.v|version[0-9]*?)(.*?)(iphone|ipad|ipod|pda|android)/i'
+            	),
             'epSplit' => '/(\d+)\s*-\s*(\d+)/i',
 			),
 		'addPart' => array(
@@ -124,12 +129,12 @@ class ed
 				'DVD' => '/dvd/i',
 				'TV Cap' => '/(tvrip|pdtv|dsr|dvb|sdtv|dtv|satrip)/i',
 				'HD-DVD' => '/hd[-.]?dvd/i',
-				'Blu-ray' => '/(blu[-. ]?ray|b(d|r|rd)[-.]?(rom|rip))/iS',
+				'Blu-ray' => '/(blu[-. ]?ray|b(d|r|rd)[-.]?(rom|rip))/i',
 				'Web-Dl' => '/(web[-. ]?dl|hditunes|ituneshd|ithd|webhd)/i'
 				),
 			'Format' => array(
 				'XviD' => '/xvid/i',
-                'DVD' => '/dvd(?!(rip|src)/i',
+                'DVD' => '/\b(dvdr|dvd5|dvd9)\b/i',
 				'H.264/x264' => '/(h.?264|x264|avc|mp4|mov)/i',
 				//'x264' => '/(x264|h\.?264|avc)/i',
 				//'H.264' => '/(h\.?264|avc)/i',
@@ -184,7 +189,6 @@ class ed
                 'Polish' => '/((\.+PL\.+))/i',
                 'Japanese' => '/(JAP)/i'
 				),
-
             'Anime' => array(
                 'TV' => '/TV Series/i',
                 'OVA' => '/OVA/i',
@@ -193,6 +197,13 @@ class ed
                 'French' => '/((vostfr)|(vost))/i',
                 'German' => '/(german.sub)/i',
                 'Dutch' => '/((nlsubs)|(nl.?subbed))/i'
+                ),
+            'PdaPlatform' => array(
+                'Android' => '/(android)/i',
+                'iPhone' => '/(iphone|ipad|ipod)/i',
+                ),
+            'PdaType' => array(
+                'Games' => '/(game)/i',
                 ),
 			),
 		'filmMatch' => array(
@@ -306,7 +317,8 @@ class ed
 				'Music' => 7,
                 'Anime' => 11,
                 'Documentaries' => 16,
-                'XXX' => 9
+                'XXX' => 9,
+                'PDA' =>12
 				),
 			'categoryGroups' => array(
 				'Movies' => array( 'Format', 'Source', 'VideoGenre', 'Audio', 'Region', 'Language', 'Subtitle' ),
@@ -317,6 +329,7 @@ class ed
                 'Anime' => array( 'Anime', 'Format', 'Language', 'Subtitle' ),
                 'Documentaries' => array( 'Format', 'Source', 'Audio', 'Region', 'Language', 'Subtitle' ),
                 'XXX' => array('Format','Region','XXXGenre','Language'),
+                'PDA' => array('PdaPlatform','PdaType'),
 				'All' => array( 'Format', 'Source', 'VideoGenre', 'Audio', 'Region', 'Media', 'ConsolePlatform', 'GameGenre', 'AudioGenre', 'Language', 'Anime', 'Subtitle' ),
 				),
 			'attributeGroups' => array(
@@ -332,7 +345,9 @@ class ed
 				'XXXGenre' => 'ps_rb_xxx_genre',
 				'Language' => 'ps_rb_language',
                 'Anime' => 'ps_rb_anime',
-                'Subtitle' => 'ps_rb_subtitle'
+                'Subtitle' => 'ps_rb_subtitle',
+                'PdaPlatform' => 'ps_rb_platform_pda',
+                'PdaType' => 'ps_rb_pda',
 				),
 			'attributeID' => array(
 				'Source' => array(
@@ -514,6 +529,14 @@ class ed
                     'Finnish' => 65536,
                     'Turkish' => 262144,
                     ),
+                 'PdaPlatform' => array(
+                    'Android' => 8388608,
+                    'iPhone' => 2097152
+                    ),
+                 'PdaType' => array(
+                    'App' => 1,
+                    'Game' => 2
+                    )
 				)
 			),
 			'attributeExclude' => array(
@@ -574,16 +597,19 @@ class ed
 				}
 			}
 		}
+
 		
+		//if ( ( $type == 0 ) || ( $type == false ) || ( $type == 6 ) {
 		
-		if ( ( $type == 0 ) || 
-		     ( $type == false ) ||
-			 ( $type == 6 ) )
-		{
 			if ( preg_match( $this->_def['info']['isXXX'], $string, $matches) )
 			{
 				if ( $this->debug ) printf("Detected XXX: [regex: %s]\n", $this->_def['info']['isXXX'] );
 				$type = 'XXX';
+			}
+			elseif ( preg_match( $this->_def['info']['isPDA'], $string, $matches ) )
+			{
+				if ( $this->debug ) printf("Detected PDA: [regex: %s]\n", $this->_def['info']['isPDA'] );
+				$type = 'PDA';
 			}
 			elseif ( preg_match( $this->_def['info']['isTV'], $string, $matches ) )
 			{
@@ -594,8 +620,8 @@ class ed
 			{
 				$type = 'Movies';
 			}
-		}
-		
+		//}
+
 		if ( !is_numeric( $type ) )
 		{
 			$id = $this->_def['report']['category'][$type];
@@ -607,19 +633,21 @@ class ed
 		
 		switch ( $id )
 		{
-			case 8:
+			case 8:	//	TV
 				return $this->tvQuery( $string );
-			case 6:
+			case 6:	//	Movies
 				return $this->filmQuery( $string );
-			case 7:
+			case 7:	//	Music
 				return $this->musicQuery( $string );
-			case 4:
-			case 2:
+			case 4:	//	Games
+			case 2:	//	Console
 				return $this->gameQuery( $string, $type );
-            case 11:
+            case 11:	//	Anime
                 return $this->animeQuery( $string );
-            case 9:
+            case 9:	//	XXX
             	return $this->xxxQuery( $string );
+            case 12:	//PDA
+            	return $this->pdaQuery( $string);
 			default:
 				if ( $type > 20 )
 				{
@@ -1493,6 +1521,7 @@ class ed
 						$reg = substr( $reg, 0, -2 ).'.+/i';
 						// this is so nothing gets deleted if it is first
 						$fTitle = substr( $fTitle, 0, 1 ).preg_replace( $reg, '', substr( $fTitle, 1 ) );
+						//echo $reg."::".$fTitle."<br/>";
 					}
 				}
 			}
@@ -1501,6 +1530,7 @@ class ed
 		$fTitle = preg_replace( $this->_def['filmMatch'], '', $fTitle );
 		
 		$fTitle = trim( str_replace( $this->_def['strip'], ' ', $fTitle ) );
+	
 		
 		while( strcmp( $fTitle, $old ) != 0 )
 		{
@@ -2129,6 +2159,76 @@ class ed
         $report[$this->_def['report']['fields']['title']] = sprintf('%s - %s%s%s',$cSite,$cDate,$cTitle,$additionalInfo);
         $report[$this->_def['report']['fields']['url']] = sprintf('http://%s',strtolower($cSite));                
         $report[$this->_def['report']['fields']['category']] = $this->_def['report']['category']['XXX'];
+        return $report;
+	}
+	
+	
+	function pdaQuery ( $string )
+	{
+		return $this->pdaGetReport( $string );
+		
+	}
+	
+	function pdaGetReport ( $string)
+	{
+		global $api;
+        $report = array();
+        if ( isset( $this->_def['info']['PDA'] ) )
+        {
+            foreach( $this->_def['info']['PDA'] as $reg )
+            {  	
+                if ( preg_match( $reg, $string, $matches ) )
+                {
+                	
+                    $matched = true;
+                    break;
+                }
+            }
+        }
+        if ( !$matched )
+        {
+            $this->_error = 'Could not match: '.$string.', check category';
+            return false;
+        }
+
+        $cTitle = trim(str_replace("."," ",$matches[1]));
+        $version = substr($matches[3],0,-1);
+      
+        
+        
+		foreach( $this->_def['attributes'] as $attr => $array )
+        {
+            if ( in_array( $attr, $this->_def['report']['categoryGroups']['PDA'] ) )
+            {
+            	$isGame = false;
+                foreach( $array as $id => $reg )
+                {
+                    if ( substr( $reg, 0, 1 ) == '!' ) 
+                    {
+                        // denote a negative regex
+                        if ( !preg_match( substr( $reg, 1 ), $string ) )
+                        {
+                            $this->addAttr( $report, 'PDA', $attr, $id );
+                        }                            
+                    }
+                    else
+                    {
+                    	
+                        if ( preg_match( $reg, $string ) )
+                        {
+                        	if($attr == 'PdaType') $isGame = true;
+                            $this->addAttr( $report, 'PDA', $attr, $id );
+                        }
+                    }
+                }
+                
+            }
+        }  
+        if($isGame!=true) $this->addAttr( $report, 'PDA', 'PdaType', 'App' );
+       
+        $report[$this->_def['report']['fields']['title']] = sprintf('%s %s%s',$cTitle, 'v', $version );
+        $report[$this->_def['report']['fields']['url']] = sprintf('%s%s%s','http://google.com/#hl=en&q=',$cTitle,'&btnI=I\'m+Feeling+Lucky');                
+        $report[$this->_def['report']['fields']['category']] = $this->_def['report']['category']['PDA'];
         return $report;
 	}
 	
