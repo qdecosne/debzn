@@ -1,0 +1,30 @@
+TODO
+
+
+lookups:
+
+	Anime:
+		anidb
+	Books:
+		amazon
+	Console:
+		gamespot
+		ign
+	Games:
+		gamespot
+		ign
+	Music:
+		allmusic
+		discog
+	Movies:
+		imdb
+		themoviedb
+		rottentomatoes
+	TV:
+		tvrage
+		thetvdb
+		tv.com
+	XXX:
+		cdunivers
+		adultdvdempire
+	
